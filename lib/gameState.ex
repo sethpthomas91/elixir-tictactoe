@@ -6,7 +6,8 @@ defmodule GameState do
       :player_1_moves => [],
       :player_2_moves => [],
       :player_1_mark => "X",
-      :player_2_mark => "O"
+      :player_2_mark => "O",
+      :current_player => 1
     }
   end
 
@@ -59,5 +60,26 @@ defmodule GameState do
       end)
 
     Enum.any?(win_list)
+  end
+
+  def update_current_player(game_state) do
+    next_player = if game_state.current_player == 1, do: 2, else: 1
+    %{game_state | current_player: next_player}
+  end
+
+  def determine_move_list(game_state) do
+    if game_state.current_player == 1 do
+      :player_1_moves
+    else
+      :player_2_moves
+    end
+  end
+
+  def update_player_move(move, game_state) do
+    current_player = determine_move_list(game_state)
+    game_state = %{game_state | available_moves: List.delete(game_state.available_moves, move)}
+
+    Map.replace(game_state, current_player, [move | game_state[current_player]])
+    |> update_current_player()
   end
 end

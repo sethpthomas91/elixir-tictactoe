@@ -110,4 +110,52 @@ defmodule GameStatetest do
     new_game_state = GameState.check_for_win(old_game_state)
     assert new_game_state.win? == false
   end
+
+  test "a move for player 1 should update the game_state" do
+    old_game_state = %{
+      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      :player_1_moves => [],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :win? => false,
+      :current_player => 1
+    }
+
+    expected_state = %{
+      :available_moves => [2, 3, 4, 5, 6, 7, 8, 9],
+      :player_1_moves => [1],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :win? => false,
+      :current_player => 2
+    }
+
+    assert GameState.update_player_move(1, old_game_state) == expected_state
+  end
+
+  test "a move for player 2 should update the game_state" do
+    old_game_state = %{
+      :available_moves => [2, 3, 4, 5, 6, 7, 8, 9],
+      :player_1_moves => [1],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :win? => false,
+      :current_player => 2
+    }
+
+    expected_state = %{
+      :available_moves => [2, 4, 5, 6, 7, 8, 9],
+      :player_1_moves => [1],
+      :player_2_moves => [3],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :win? => false,
+      :current_player => 1
+    }
+
+    assert GameState.update_player_move(3, old_game_state) == expected_state
+  end
 end
