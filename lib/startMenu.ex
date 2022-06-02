@@ -9,4 +9,8 @@ defmodule StartMenu do
     IO.puts("When prompted by the computer, enter a number to play in a space.")
     IO.puts("The game will end when there is a win.")
   end
+
+  def display_win(marker) do
+    IO.puts("Player #{marker} has won!")
+  end
 end
