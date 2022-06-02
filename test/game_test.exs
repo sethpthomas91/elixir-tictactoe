@@ -54,17 +54,17 @@ defmodule GameStatetest do
   end
 
   test "test that a winning combination on the top row returns true" do
-    player_moves = [1,2,3]
+    player_moves = [1, 2, 3]
     assert GameState.check_for_win_combos(player_moves) == true
   end
 
   test "test that a winning combination on the mid row returns true" do
-    player_moves = [4,5,6]
+    player_moves = [4, 5, 6]
     assert GameState.check_for_win_combos(player_moves) == true
   end
 
   test "test that a winning combination on the bottom row returns true" do
-    player_moves = [7,8,9]
+    player_moves = [7, 8, 9]
     assert GameState.check_for_win_combos(player_moves) == true
   end
 
@@ -80,10 +80,9 @@ defmodule GameStatetest do
     assert new_game_state.win? == false
   end
 
-  test "test that an winning game_state for player_1 passed into a check for win function has a true for win?" do
+  test "test that a top row winning game_state for player_1 passed into a check for win function has a true for win?" do
     old_game_state = %{
-      :available_moves => [4, 5, 6, 7, 8, 9],
-      :player_1_moves => [3,2,1],
+      :player_1_moves => [3, 2, 1],
       :player_2_moves => [],
       :win? => false
     }
@@ -92,5 +91,23 @@ defmodule GameStatetest do
     assert new_game_state.win? == true
   end
 
+  test "test that a diagonal winning game_state for player_1 passed into a check for win function has a true for win?" do
+    old_game_state = %{
+      :player_1_moves => [1, 9, 5],
+      :win? => false
+    }
 
+    new_game_state = GameState.check_for_win(old_game_state)
+    assert new_game_state.win? == true
+  end
+
+  test "test that a non winning game_state for player_1 passed into a check for win function has a false for win?" do
+    old_game_state = %{
+      :player_1_moves => [1, 3, 7],
+      :win? => false
+    }
+
+    new_game_state = GameState.check_for_win(old_game_state)
+    assert new_game_state.win? == false
+  end
 end
