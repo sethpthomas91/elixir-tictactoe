@@ -73,7 +73,8 @@ defmodule GameStatetest do
       :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
       :player_1_moves => [],
       :player_2_moves => [],
-      :win? => false
+      :win? => false,
+      :current_player => 1
     }
 
     new_game_state = GameState.check_for_win(old_game_state)
@@ -84,7 +85,8 @@ defmodule GameStatetest do
     old_game_state = %{
       :player_1_moves => [3, 2, 1],
       :player_2_moves => [],
-      :win? => false
+      :win? => false,
+      :current_player => 1
     }
 
     new_game_state = GameState.check_for_win(old_game_state)
@@ -94,7 +96,8 @@ defmodule GameStatetest do
   test "test that a diagonal winning game_state for player_1 passed into a check for win function has a true for win?" do
     old_game_state = %{
       :player_1_moves => [1, 9, 5],
-      :win? => false
+      :win? => false,
+      :current_player => 1
     }
 
     new_game_state = GameState.check_for_win(old_game_state)
@@ -104,7 +107,8 @@ defmodule GameStatetest do
   test "test that a non winning game_state for player_1 passed into a check for win function has a false for win?" do
     old_game_state = %{
       :player_1_moves => [1, 3, 7],
-      :win? => false
+      :win? => false,
+      :current_player => 1
     }
 
     new_game_state = GameState.check_for_win(old_game_state)

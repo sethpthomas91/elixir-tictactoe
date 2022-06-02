@@ -28,8 +28,9 @@ defmodule GameState do
   end
 
   def check_for_win(game_state) do
+    move_list = determine_move_list(game_state)
     win_status =
-      game_state.player_1_moves
+      game_state[move_list]
       |> check_for_win_combos()
 
     set_game_state_win(win_status, game_state)

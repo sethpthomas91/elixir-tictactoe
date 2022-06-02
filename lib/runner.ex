@@ -22,6 +22,7 @@ defmodule Runner do
   def turn(game_state, _available_moves) do
     display_board(game_state)
     game_state = update_player_move(get_user_input(), game_state)
+    
     turn(game_state, game_state.available_moves)
   end
 end
