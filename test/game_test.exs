@@ -151,11 +151,31 @@ defmodule GameStatetest do
     assert GameState.change_player(game_state)[:current_player] == 1
   end
 
-  test "change player should change the player 1 to player 2" do
+  test " handle random move should take one move from the available move list" do
     game_state = %{
+      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      :win? => false,
+      :player_1_moves => [],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
       :current_player => 1
     }
 
-    assert GameState.change_player(game_state)[:current_player] == 2
+    assert length(GameState.handle_random_move(game_state)[:available_moves]) == 8
+  end
+
+  test " handle random move should add one move to the current player's move list" do
+    game_state = %{
+      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      :win? => false,
+      :player_1_moves => [],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :current_player => 1
+    }
+
+    assert length(GameState.handle_random_move(game_state)[:player_1_moves]) == 1
   end
 end

@@ -65,7 +65,7 @@ defmodule GameState do
   end
 
   def change_player(game_state) do
-    %{game_state | current_player: (if get_current_player(game_state) == 1, do: 2, else: 1)}
+    %{game_state | current_player: if(get_current_player(game_state) == 1, do: 2, else: 1)}
   end
 
   def determine_move_list(game_state) do
@@ -78,14 +78,21 @@ defmodule GameState do
     end
   end
 
-  def handle_move(move, game_state) do
+  def handle_random_move(game_state) do
+    move = get_random_move(game_state)
     player_move_list = determine_move_list(game_state)
-    game_state = update_available_moves(move, game_state)
+    game_state = set_available_moves(move, game_state)
     update_player_move_list(game_state, player_move_list, move)
   end
 
-  def update_available_moves(move, game_state) do
-    %{game_state | available_moves: List.delete(game_state.available_moves, move)}
+  def handle_move(move, game_state) do
+    player_move_list = determine_move_list(game_state)
+    game_state = set_available_moves(move, game_state)
+    update_player_move_list(game_state, player_move_list, move)
+  end
+
+  def set_available_moves(move, game_state) do
+    %{game_state | available_moves: remove_move_from_available_moves(move, game_state)}
   end
 
   def update_player_move_list(game_state, player_move_list, move) do
@@ -94,5 +101,13 @@ defmodule GameState do
 
   def get_current_player(game_state) do
     game_state[:current_player]
+  end
+
+  def remove_move_from_available_moves(move, game_state) do
+    List.delete(game_state[:available_moves], move)
+  end
+
+  def get_random_move(game_state) do
+    Enum.random(game_state[:available_moves])
   end
 end

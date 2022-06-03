@@ -28,7 +28,6 @@ defmodule Runner do
     if win?(game_state) == true do
       case get_current_player(game_state) do
         1 -> display_win(game_state.player_1_mark)
-
         2 -> display_win(game_state.player_2_mark)
       end
     else
