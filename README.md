@@ -2,20 +2,24 @@
 
 **TODO: Add description**
 
-## Installation
+## How to play
+1. Follow the installation instructions
 
-If [available in Hex](https://hex.pm/docs/publish), the package can be installed
-by adding `ttt` to your list of dependencies in `mix.exs`:
-
-```elixir
-def deps do
-  [
-    {:ttt, "~> 0.1.0"}
-  ]
-end
+2. Enter the mix environement
+```
+iex -S mix
 ```
 
-Documentation can be generated with [ExDoc](https://github.com/elixir-lang/ex_doc)
-and published on [HexDocs](https://hexdocs.pm). Once published, the docs can
-be found at <https://hexdocs.pm/ttt>.
+3. Run the game
+```
+Runner.run
+``` 
+
+## Installation
+
+1. Clone the repo
+```
+git clone git@github.com:sethpthomas91/elixir-tictactoe.git
+```
+
 
