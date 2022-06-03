@@ -65,30 +65,31 @@ defmodule GameState do
   end
 
   def change_player(game_state) do
-    next_player = if game_state.current_player == 1, do: 2, else: 1
-    %{game_state | current_player: next_player}
+    %{game_state | current_player: (if get_current_player(game_state) == 1, do: 2, else: 1)}
   end
 
   def determine_move_list(game_state) do
-    if game_state.current_player == 1 do
-      :player_1_moves
-    else
-      :player_2_moves
+    case get_current_player(game_state) do
+      1 ->
+        :player_1_moves
+
+      2 ->
+        :player_2_moves
     end
   end
 
   def handle_move(move, game_state) do
-    current_player = determine_move_list(game_state)
+    player_move_list = determine_move_list(game_state)
     game_state = update_available_moves(move, game_state)
-    update_player_move_list(game_state, current_player, move)
+    update_player_move_list(game_state, player_move_list, move)
   end
 
   def update_available_moves(move, game_state) do
     %{game_state | available_moves: List.delete(game_state.available_moves, move)}
   end
 
-  def update_player_move_list(game_state, current_player, move) do
-    Map.replace(game_state, current_player, [move | game_state[current_player]])
+  def update_player_move_list(game_state, player_move_list, move) do
+    Map.replace(game_state, player_move_list, [move | game_state[player_move_list]])
   end
 
   def get_current_player(game_state) do

@@ -17,7 +17,7 @@ defmodule Runner do
   end
 
   def turn(_game_state, []) do
-    IO.puts("draw")
+    IO.puts("Game Draw")
   end
 
   def turn(game_state, _available_moves) do
