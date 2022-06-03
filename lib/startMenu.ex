@@ -1,9 +1,6 @@
 import GameState
 
 defmodule StartMenu do
-  def get_user_input do
-    String.to_integer(String.trim(IO.gets("Please enter a number: ")))
-  end
 
   def display_instructions do
     IO.puts("Welcome to Elixir Tic-Tac-Toe.")

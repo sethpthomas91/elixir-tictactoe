@@ -1,5 +1,3 @@
-import StartMenu
-
 defmodule GameState do
   def new_game_state do
     %{
@@ -74,11 +72,8 @@ defmodule GameState do
 
   def determine_move_list(game_state) do
     case get_current_player(game_state) do
-      1 ->
-        :player_1_moves
-
-      2 ->
-        :player_2_moves
+      1 -> :player_1_moves
+      2 -> :player_2_moves
     end
   end
 
@@ -99,6 +94,10 @@ defmodule GameState do
     %{game_state | available_moves: remove_move_from_available_moves(move, game_state)}
   end
 
+  def get_available_moves(game_state) do
+    game_state[:available_moves]
+  end
+
   def update_player_move_list(game_state, player_move_list, move) do
     Map.replace(game_state, player_move_list, [move | game_state[player_move_list]])
   end
@@ -108,11 +107,11 @@ defmodule GameState do
   end
 
   def remove_move_from_available_moves(move, game_state) do
-    List.delete(game_state[:available_moves], move)
+    List.delete(get_available_moves(game_state), move)
   end
 
   def get_random_move(game_state) do
-    Enum.random(game_state[:available_moves])
+    Enum.random(get_available_moves(game_state))
   end
 
   def set_player_2_type(type, game_state) do
@@ -128,8 +127,17 @@ defmodule GameState do
 
   def determine_move_type(game_state) do
     case get_current_player_type(game_state) do
-      :human -> handle_move(get_user_input(), game_state)
+      :human -> handle_move(get_user_move(game_state), game_state)
       :random -> handle_random_move(game_state)
+    end
+  end
+
+  def get_user_move(game_state) do
+    move = String.to_integer(String.trim(IO.gets("Please enter a move: ")))
+    if (move in get_available_moves(game_state)) do
+      move
+    else
+      get_user_move(game_state)
     end
   end
 end
