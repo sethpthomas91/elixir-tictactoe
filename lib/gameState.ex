@@ -11,8 +11,8 @@ defmodule GameState do
     }
   end
 
-  def won?(game_state) do
-    game_state[:won?]
+  def win?(game_state) do
+    game_state[:win?]
   end
 
   def set_player_1_mark(new_marker, game_state) do
@@ -29,6 +29,7 @@ defmodule GameState do
 
   def check_for_win(game_state) do
     move_list = determine_move_list(game_state)
+
     win_status =
       game_state[move_list]
       |> check_for_win_combos()
@@ -63,7 +64,7 @@ defmodule GameState do
     Enum.any?(win_list)
   end
 
-  def update_current_player(game_state) do
+  def change_player(game_state) do
     next_player = if game_state.current_player == 1, do: 2, else: 1
     %{game_state | current_player: next_player}
   end
@@ -76,11 +77,21 @@ defmodule GameState do
     end
   end
 
-  def update_player_move(move, game_state) do
+  def handle_move(move, game_state) do
     current_player = determine_move_list(game_state)
-    game_state = %{game_state | available_moves: List.delete(game_state.available_moves, move)}
+    game_state = update_available_moves(move, game_state)
+    update_player_move_list(game_state, current_player, move)
+  end
 
+  def update_available_moves(move, game_state) do
+    %{game_state | available_moves: List.delete(game_state.available_moves, move)}
+  end
+
+  def update_player_move_list(game_state, current_player, move) do
     Map.replace(game_state, current_player, [move | game_state[current_player]])
-    |> update_current_player()
+  end
+
+  def get_current_player(game_state) do
+    game_state[:current_player]
   end
 end

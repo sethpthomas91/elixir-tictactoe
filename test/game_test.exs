@@ -115,7 +115,7 @@ defmodule GameStatetest do
     assert new_game_state.win? == false
   end
 
-  test "a move for player 1 should update the game_state" do
+  test "a move for player 1 should update the player move list" do
     old_game_state = %{
       :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
       :player_1_moves => [],
@@ -126,17 +126,7 @@ defmodule GameStatetest do
       :current_player => 1
     }
 
-    expected_state = %{
-      :available_moves => [2, 3, 4, 5, 6, 7, 8, 9],
-      :player_1_moves => [1],
-      :player_2_moves => [],
-      :player_1_mark => "X",
-      :player_2_mark => "O",
-      :win? => false,
-      :current_player => 2
-    }
-
-    assert GameState.update_player_move(1, old_game_state) == expected_state
+    assert GameState.handle_move(1, old_game_state)[:player_1_moves] == [1]
   end
 
   test "a move for player 2 should update the game_state" do
@@ -150,16 +140,22 @@ defmodule GameStatetest do
       :current_player => 2
     }
 
-    expected_state = %{
-      :available_moves => [2, 4, 5, 6, 7, 8, 9],
-      :player_1_moves => [1],
-      :player_2_moves => [3],
-      :player_1_mark => "X",
-      :player_2_mark => "O",
-      :win? => false,
+    assert GameState.handle_move(3, old_game_state)[:player_2_moves] == [3]
+  end
+
+  test "change player should change the current player to the next player" do
+    game_state = %{
+      :current_player => 2
+    }
+
+    assert GameState.change_player(game_state)[:current_player] == 1
+  end
+
+  test "change player should change the player 1 to player 2" do
+    game_state = %{
       :current_player => 1
     }
 
-    assert GameState.update_player_move(3, old_game_state) == expected_state
+    assert GameState.change_player(game_state)[:current_player] == 2
   end
 end
