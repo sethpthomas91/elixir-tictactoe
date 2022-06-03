@@ -1,3 +1,5 @@
+import StartMenu
+
 defmodule GameState do
   def new_game_state do
     %{
@@ -7,6 +9,8 @@ defmodule GameState do
       :player_2_moves => [],
       :player_1_mark => "X",
       :player_2_mark => "O",
+      :player_1_type => :human,
+      :player_2_type => :human,
       :current_player => 1
     }
   end
@@ -109,5 +113,23 @@ defmodule GameState do
 
   def get_random_move(game_state) do
     Enum.random(game_state[:available_moves])
+  end
+
+  def set_player_2_type(type, game_state) do
+    %{game_state | player_2_type: type}
+  end
+
+  def get_current_player_type(game_state) do
+    case get_current_player(game_state) do
+      1 -> game_state[:player_1_type]
+      2 -> game_state[:player_2_type]
+    end
+  end
+
+  def determine_move_type(game_state) do
+    case get_current_player_type(game_state) do
+      :human -> handle_move(get_user_input(), game_state)
+      :random -> handle_random_move(game_state)
+    end
   end
 end

@@ -178,4 +178,40 @@ defmodule GameStatetest do
 
     assert length(GameState.handle_random_move(game_state)[:player_1_moves]) == 1
   end
+
+  test "set_player_2_type with random should set player 2 to random" do
+    game_state = %{
+      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      :win? => false,
+      :player_1_moves => [],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :player_1_type => :human,
+      :player_2_type => :human,
+      :current_player => 1
+    }
+
+    assert GameState.set_player_2_type(:random, game_state)[:player_2_type] == :random
+  end
+
+  test "get current player type should return the current player type for human in player 1" do
+    game_state = %{
+      :player_1_type => :human,
+      :player_2_type => :human,
+      :current_player => 1
+    }
+
+    assert GameState.get_current_player_type(game_state) == :human
+  end
+
+  test "get current player type should return the current player type for random for player 2" do
+    game_state = %{
+      :player_1_type => :human,
+      :player_2_type => :random,
+      :current_player => 2
+    }
+
+    assert GameState.get_current_player_type(game_state) == :random
+  end
 end

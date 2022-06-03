@@ -8,8 +8,9 @@ defmodule Runner do
     display_instructions()
     :timer.sleep(2000)
 
-    game_state = new_game_state()
-    turn(game_state)
+    new_game_state()
+    |>determine_game_type()
+    |>turn()
   end
 
   def turn(game_state) do
@@ -22,7 +23,7 @@ defmodule Runner do
 
   def turn(game_state, _available_moves) do
     display_board(game_state)
-    game_state = handle_move(get_user_input(), game_state)
+    game_state = determine_move_type(game_state)
     game_state = check_for_win(game_state)
 
     if win?(game_state) == true do
