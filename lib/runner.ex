@@ -17,7 +17,8 @@ defmodule Runner do
     turn(game_state, game_state.available_moves)
   end
 
-  def turn(_game_state, []) do
+  def turn(game_state, []) do
+    display_board(game_state)
     IO.puts("Game Draw")
   end
 
@@ -27,6 +28,7 @@ defmodule Runner do
     game_state = check_for_win(game_state)
 
     if win?(game_state) == true do
+      display_board(game_state)
       case get_current_player(game_state) do
         1 -> display_win(game_state.player_1_mark)
         2 -> display_win(game_state.player_2_mark)

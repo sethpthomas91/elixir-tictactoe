@@ -137,6 +137,7 @@ defmodule GameState do
     if (move in get_available_moves(game_state)) do
       move
     else
+      IO.puts("Please enter a move that has not been entered.")
       get_user_move(game_state)
     end
   end
