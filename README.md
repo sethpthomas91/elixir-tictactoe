@@ -1,26 +1,73 @@
-# Ttt
+# ELIXIR Tic-aic-Toe
 
-**TODO: Add description**
+<!-- ABOUT THE PROJECT -->
+## About The Project
 
-## How to play
-1. Follow the installation instructions
+This is an Elixir TTT game made for my 8th Light apprenticeship. It focuses on using test driven development in order to build a robust program that stresses software development fundamentals.
 
-2. Enter the mix environement
-```
+<!-- BUILD STATUS -->
+## Current Project Status
+
+[![Game of Life Tests](https://github.com/sethpthomas91/elixir-tictactoe/actions/workflows/elixirTests.yml/badge.svg)](https://github.com/sethpthomas91/elixir-tictactoe/actions/workflows/elixirTests.yml)
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+<!-- Built With -->
+### Built With
+
+* [Elixir](https://elixir-lang.org/)
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+
+
+<!-- GETTING STARTED -->
+## Getting Started
+
+
+### Prerequisites
+
+In order to run this project you will need to install Elixir. It uses the built in Elixir mix environement to run.
+Follow instructions on the websites listed above in the "Built With" section to install these. 
+
+
+### Installation
+
+1 Clone the repo
+   ```sh
+git clone git@github.com:sethpthomas91/elixir-tictactoe.git
+   ```
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Playing the Game
+1 Navgate to the project root directory. It should contain a mix.exs file.
+
+2 Enter the mix environment
+```sh
 iex -S mix
 ```
 
-3. Run the game
-```
+3 Run the game
+```sh
 Runner.run
-``` 
-
-## Installation
-
-1. Clone the repo
-```
-git clone git@github.com:sethpthomas91/elixir-tictactoe.git
 ```
 
+4 Exiting the game
 
+This game exits when one of two condtions are met, a player wins or a draw is met. You can continue to play by running Runner.run again, or you can exit the program by holding down the control key, and pressing "c" twice.
+
+<p align="right">(<a href="#top">back to top</a>)</p>
+
+### Testing
+
+1 After cloning the repo run the test suite with the following command
+   ```sh
+mix test 
+   ```
+
+<!-- ACKNOWLEDGMENTS -->
+## Contributors
+
+* [sethpthomas91](https://github.com/sethpthomas91)
 
