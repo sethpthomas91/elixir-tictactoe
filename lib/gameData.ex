@@ -1,29 +1,29 @@
-defmodule GameState do
-  def new_game_state do
-    %{
-      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
-      :win? => false,
-      :player_1_moves => [],
-      :player_2_moves => [],
-      :player_1_mark => "X",
-      :player_2_mark => "O",
-      :current_player => 1
-    }
-  end
+defmodule GameData do
+  @new_game_data %{
+    :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+    :win? => false,
+    :player_1_moves => [],
+    :player_2_moves => [],
+    :player_1_mark => "X",
+    :player_2_mark => "O",
+    :current_player => 1
+  }
+
+  def new, do: @new_game_data
 
   def win?(game_state) do
     game_state[:win?]
   end
 
-  def set_player_1_mark(new_marker, game_state) do
+  def assign_player_1_mark(new_marker, game_state) do
     %{game_state | player_1_mark: new_marker}
   end
 
-  def set_player_2_mark(new_marker, game_state) do
+  def assign_player_2_mark(new_marker, game_state) do
     %{game_state | player_2_mark: new_marker}
   end
 
-  def set_game_state_win(win_status, game_state) do
+  def assign_game_state_win(win_status, game_state) do
     %{game_state | win?: win_status}
   end
 
@@ -34,7 +34,7 @@ defmodule GameState do
       game_state[move_list]
       |> check_for_win_combos()
 
-    set_game_state_win(win_status, game_state)
+    assign_game_state_win(win_status, game_state)
   end
 
   def check_for_win_combos(moves_list) do
@@ -94,5 +94,9 @@ defmodule GameState do
 
   def get_current_player(game_state) do
     game_state[:current_player]
+  end
+
+  def get_available_moves(game_state) do
+    game_state[:available_moves]
   end
 end
