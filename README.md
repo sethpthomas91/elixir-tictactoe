@@ -8,17 +8,8 @@ This is an Elixir TTT game made for my 8th Light apprenticeship. It focuses on u
 <!-- BUILD STATUS -->
 ## Current Project Status
 
-[![Game of Life Tests](https://github.com/sethpthomas91/elixir-tictactoe/actions/workflows/elixirTests.yml/badge.svg)](https://github.com/sethpthomas91/elixir-tictactoe/actions/workflows/elixirTests.yml)
+[![Elixir TicTacToe Tests](https://github.com/sethpthomas91/elixir-tictactoe/actions/workflows/elixirTests.yml/badge.svg)](https://github.com/sethpthomas91/elixir-tictactoe/actions/workflows/elixirTests.yml)
 <p align="right">(<a href="#top">back to top</a>)</p>
-
-
-<!-- Built With -->
-### Built With
-
-* [Elixir](https://elixir-lang.org/)
-
-<p align="right">(<a href="#top">back to top</a>)</p>
-
 
 
 <!-- GETTING STARTED -->
@@ -27,8 +18,10 @@ This is an Elixir TTT game made for my 8th Light apprenticeship. It focuses on u
 
 ### Prerequisites
 
-In order to run this project you will need to install Elixir. It uses the built in Elixir mix environement to run.
-Follow instructions on the websites listed above in the "Built With" section to install these. 
+In order to run this project you will need to install Elixir. It uses the built in Elixir mix environment to run.
+```sh
+Elixir 1.13
+```
 
 
 ### Installation
