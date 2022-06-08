@@ -12,10 +12,6 @@ defmodule Display do
     |> IO.write()
   end
 
-  def get_user_input do
-    String.to_integer(String.trim(IO.gets("Please enter a number: ")))
-  end
-
   def display_instructions do
     IO.write("\e[H\e[J\n")
     IO.puts("Welcome to Elixir Tic-Tac-Toe.")
