@@ -74,7 +74,8 @@ defmodule Gametest do
       :player_1_moves => [],
       :player_2_moves => [],
       :win? => false,
-      :current_player => 1
+      :current_player => 1,
+      :winner => nil
     }
 
     new_game_state = Game.check_for_win(old_game_state)
@@ -86,7 +87,8 @@ defmodule Gametest do
       :player_1_moves => [3, 2, 1],
       :player_2_moves => [],
       :win? => false,
-      :current_player => 1
+      :current_player => 1,
+      :winner => nil
     }
 
     new_game_state = Game.check_for_win(old_game_state)
@@ -97,7 +99,8 @@ defmodule Gametest do
     old_game_state = %{
       :player_1_moves => [1, 9, 5],
       :win? => false,
-      :current_player => 1
+      :current_player => 1,
+      :winner => nil
     }
 
     new_game_state = Game.check_for_win(old_game_state)
@@ -108,7 +111,8 @@ defmodule Gametest do
     old_game_state = %{
       :player_1_moves => [1, 3, 7],
       :win? => false,
-      :current_player => 1
+      :current_player => 1,
+      :winner => nil
     }
 
     new_game_state = Game.check_for_win(old_game_state)
@@ -266,4 +270,217 @@ defmodule Gametest do
 
     assert Game.get_current_player_type(game_state) == :random
   end
+
+  test "assign_player_2_type with best should set player 2 to best" do
+    game = %{
+      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      :win? => false,
+      :player_1_moves => [],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :player_1_type => :human,
+      :player_2_type => :human,
+      :current_player => 1
+    }
+
+    assert Game.assign_player_2_type(:best, game)[:player_2_type] == :best
+  end
+
+  test "assign_player_2_type with next should set player 2 to next" do
+    game = %{
+      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      :win? => false,
+      :player_1_moves => [],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :player_1_type => :human,
+      :player_2_type => :next,
+      :current_player => 1
+    }
+
+    assert Game.assign_player_2_type(:next, game)[:player_2_type] == :next
+  end
+
+  test "next_open should return the next move that is available" do
+    game = %{
+      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9]
+    }
+
+    assert Game.next_open(game) == 1
+  end
+
+  test "handle_next_move should return the next move that is available" do
+    game = %{
+      :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
+      :win? => false,
+      :player_1_moves => [],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :player_1_type => :next,
+      :player_2_type => :human,
+      :current_player => 1,
+      :board => %{
+        1 => "1",
+        2 => "2",
+        3 => "3",
+        4 => "4",
+        5 => "5",
+        6 => "6",
+        7 => "7",
+        8 => "8",
+        9 => "9"
+      }
+    }
+
+    expected_game = %{
+      :available_moves => [2, 3, 4, 5, 6, 7, 8, 9],
+      :win? => false,
+      :player_1_moves => [1],
+      :player_2_moves => [],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :player_1_type => :next,
+      :player_2_type => :human,
+      :current_player => 1,
+      :board => %{
+        1 => "X",
+        2 => "2",
+        3 => "3",
+        4 => "4",
+        5 => "5",
+        6 => "6",
+        7 => "7",
+        8 => "8",
+        9 => "9"
+      }
+    }
+
+    assert Game.handle_next_move(game) == expected_game
+  end
+
+  test "score should return 0 when the game is a draw" do
+    game = %{
+      :available_moves => [],
+      :win? => false
+    }
+
+    assert Game.score(game) == 0
+  end
+
+  test "score should return 10 when the game is won by maximizer" do
+    game = %{
+      :win? => true,
+      :maximizer => 1,
+      :winner => 1
+    }
+
+    assert Game.score(game) == 10
+  end
+
+  test "score should return -10 when the game is won by minimizer" do
+    game = %{
+      :win? => true,
+      :maximizer => 1,
+      :winner => 2
+    }
+
+    assert Game.score(game) == -10
+  end
+
+  test "best_move returns final move that wins" do
+    game = %{
+      :available_moves => [7],
+      :player_1_moves => [1, 3, 4, 8],
+      :player_2_moves => [2, 5, 6, 9],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :player_1_type => :best,
+      :player_2_type => :human,
+      :win? => false,
+      :winner => nil,
+      :current_player => 1,
+      :maximizer => nil,
+      :board => %{
+        1 => "X",
+        2 => "O",
+        3 => "X",
+        4 => "X",
+        5 => "O",
+        6 => "O",
+        7 => "7",
+        8 => "X",
+        9 => "O"
+      }
+    }
+
+    assert Game.best_move(game) == 7
+  end
+
+  test "best_move returns final move that blocks a win" do
+    game = %{
+      :available_moves => [3, 7, 8, 9],
+      :player_1_moves => [1, 4, 8],
+      :player_2_moves => [2, 5],
+      :player_1_mark => "X",
+      :player_2_mark => "O",
+      :player_1_type => :human,
+      :player_2_type => :best,
+      :win? => false,
+      :winner => nil,
+      :current_player => 2,
+      :maximizer => nil,
+      :board => %{
+        1 => "X",
+        2 => "O",
+        3 => "3",
+        4 => "X",
+        5 => "O",
+        6 => "6",
+        7 => "7",
+        8 => "X",
+        9 => "9"
+      }
+    }
+
+    assert Game.best_move(game) == 7
+  end
+
+  # test "handle_best_move returns game with best move taken" do
+  #   game = %{
+  #     :available_moves =>[1, 7, 8, 9],
+  #     :player_1_moves => [2, 3],
+  #     :player_2_moves => [5, 6],
+  #     :win? => false,
+  #     :maximizer => 1
+  #   }
+
+  #   updated_game = %{
+  #     :available_moves =>[7, 8, 9],
+  #     :player_1_moves => [1, 2, 3],
+  #     :player_2_moves => [5, 6],
+  #     :win? => true,
+  #     :maximizer => 1
+  #   }
+
+  #   assert Game.handle_best_move(game) == updated_game
+  # end
+
+  # test "best_move should block a winning move at 2" do
+  #   game = %{
+  #     :available_moves => [2, 4, 5, 6, 7, 8],
+  #     :win? => false,
+  #     :player_1_moves => [1,3],
+  #     :player_2_moves => [9],
+  #     :player_1_mark => "X",
+  #     :player_2_mark => "O",
+  #     :player_1_type => :human,
+  #     :player_2_type => :best,
+  #     :current_player => 2
+  #   }
+
+  #   assert Game.best_move(game) == 2
+  # end
 end
