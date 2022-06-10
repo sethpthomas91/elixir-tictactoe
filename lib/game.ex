@@ -2,6 +2,7 @@ defmodule Game do
   @new_game %{
     :available_moves => [1, 2, 3, 4, 5, 6, 7, 8, 9],
     :win? => false,
+    :winner => nil,
     :player_1_moves => [],
     :player_2_moves => [],
     :player_1_mark => "X",
@@ -9,6 +10,11 @@ defmodule Game do
     :current_player => 1,
     :player_1_type => :human,
     :player_2_type => :human,
+    :maximizer => nil,
+    :best_score_move => %{
+      :best_score => -100,
+      :best_move => nil
+    },
     :board => %{
       1 => "1",
       2 => "2",
@@ -30,7 +36,8 @@ defmodule Game do
 
   def assign_player_2_mark(marker, game), do: %{game | player_2_mark: marker}
 
-  def assign_game_win(win?, game), do: %{game | win?: win?}
+  def assign_game_win(false, game), do: game
+  def assign_game_win(win?, game), do: %{game | win?: win?, winner: game.current_player}
 
   def check_for_win(game) do
     win? =
@@ -92,11 +99,13 @@ defmodule Game do
 
   def get_available_moves(game), do: game[:available_moves]
 
-  def remove_move_from_available_moves(move, game), do: List.delete(get_available_moves(game), move)
+  def remove_move_from_available_moves(move, game),
+    do: List.delete(get_available_moves(game), move)
 
   def get_random_move(game), do: Enum.random(get_available_moves(game))
 
   def assign_player_2_type(type, game), do: %{game | player_2_type: type}
+  def assign_player_1_type(type, game), do: %{game | player_1_type: type}
 
   def get_current_player_type(game) when game.current_player == 1, do: game.player_1_type
   def get_current_player_type(game), do: game.player_2_type
@@ -105,6 +114,8 @@ defmodule Game do
     case get_current_player_type(game) do
       :human -> handle_move(Display.get_user_move(game), game)
       :random -> handle_random_move(game)
+      :next -> handle_next_move(game)
+      :best -> handle_move(best_move(game), game)
     end
   end
 
@@ -124,4 +135,56 @@ defmodule Game do
   def get_marker(game), do: game.player_2_mark
 
   def update_board(board, game), do: %{game | board: board}
+
+  def next_open(game), do: List.first(get_available_moves(game))
+
+  def handle_next_move(game) do
+    move = next_open(game)
+    player_move_list = determine_move_list(game)
+    game = update_available_moves(move, game)
+    game = update_player_move_list(game, player_move_list, move)
+    place_marker(move, game)
+  end
+
+  def best_move(game) do
+    assign_maximizer(game)
+    |> minimax()
+  end
+
+  def assign_maximizer(game), do: %{game | maximizer: game.current_player}
+
+  def assign_winner(game), do: %{game | winner: game.current_player}
+
+  def score(%{win?: false, available_moves: []}), do: 0
+  def score(%{winner: winner, win?: true, maximizer: maximizer}) when winner == maximizer, do: 10
+  def score(%{win?: true}), do: -10
+  def score(game), do: game
+
+  def terminal_state(%{win?: false, available_moves: []}), do: true
+  def terminal_state(%{win?: true}), do: true
+  def terminal_state(_), do: false
+
+  def minimax(game) do
+    game = check_for_win(game)
+
+    if terminal_state(game) do
+      score(game)
+    else
+      next_games =
+        Enum.map(game.available_moves, fn move ->
+          game = handle_move(move, change_player(game))
+          %{game | best_score_move: %{:best_score => minimax(game), :best_move => move}}
+        end)
+
+      case game.current_player == game.maximizer do
+        true ->
+          best_game = Enum.min_by(next_games, fn game -> game.best_score_move.best_score end)
+          best_game.best_score_move.best_move
+
+        false ->
+          best_game = Enum.max_by(next_games, fn game -> game.best_score_move.best_score end)
+          best_game.best_score_move.best_move
+      end
+    end
+  end
 end
