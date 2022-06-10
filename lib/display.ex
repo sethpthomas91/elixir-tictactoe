@@ -1,5 +1,4 @@
 defmodule Display do
-
   def display_board(game) do
     board = game.board
     clear_screen = "\e[H\e[J\n"
@@ -10,10 +9,6 @@ defmodule Display do
 
     (clear_screen <> row_1 <> horiz_divide <> row_2 <> horiz_divide <> row_3)
     |> IO.write()
-  end
-
-  def get_user_input do
-    String.to_integer(String.trim(IO.gets("Please enter a number: ")))
   end
 
   def display_instructions do
@@ -35,12 +30,16 @@ defmodule Display do
   def display_draw, do: IO.puts("Game Draw")
 
   def determine_game_type(game) do
-    message = "Do you want to play against a computer?\n 1=Yes 2=No "
+    message =
+      "How do you want to play?\n 1= 2nd player is a random computer\n 2= 2nd player is a human \n 3= 2nd player will only play the next move\n 4= 2nd player will only play the best move\nChoice: "
+
     choice = get_user_input(message)
 
     case choice do
       1 -> Game.assign_player_2_type(:random, game)
       2 -> game
+      3 -> Game.assign_player_2_type(:next, game)
+      4 -> Game.assign_player_2_type(:best, game)
     end
   end
 
